@@ -4,22 +4,15 @@ settings = get_settings()
 
 EMAIL_DEFS = {
     'verify_email': {
-        'subject': "SecureBloc: Verify your email",
+        'subject': "Verify your Zonecam account",
         'mail_from': settings.mail_from,
         'template_name': "verify_email.html",
     },
 
     'verify_email_complete': {
-        'subject': "Welcome to SecureBloc",
+        'subject': "Welcome to Zonecam",
         'mail_from': settings.mail_from,
         'template_name': "verify_email_complete.html",
-    },
-
-
-    'sign_in_notification': {
-        'subject': "Sign In Alert",
-        'mail_from': settings.mail_from,
-        'template_name': "sign_in_alert.html",
     },
 
 

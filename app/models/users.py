@@ -16,27 +16,11 @@ USER_EXCLUDE_FIELDS = {
 class UserBase(BaseModel):
 
     email:  EmailStr | None
-    full_name: str = Field(
-        alias="fullName",  min_length=2, max_length=32)
+    first_name: str = Field(
+        alias="firstName", min_length=2, max_length=32)
 
-    @field_validator("full_name")
-    @classmethod
-    def check_fullname(cls, v):
-
-        if not v:
-            raise ValueError("Fullname is required.")
-
-        names_arr = v.split(" ")
-
-        if len(names_arr) < 2:
-            raise ValueError("Fullname must contain at least two names.")
-
-        # for name in names_arr:
-        #     if len(name) < 2:
-        #         raise ValueError(
-        #             "Each name must contain at least two characters.")
-
-        return f"{names_arr[0].title()} {names_arr[1].title()}"
+    last_name: str = Field(
+        alias="lastName", min_length=2, max_length=32)
 
 
 class UserInput(UserBase):

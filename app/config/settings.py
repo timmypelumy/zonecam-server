@@ -6,15 +6,15 @@ class Settings(BaseSettings):
 
     """ Application Settings """
 
-    app_name: str = "BSSPD"
+    app_name: str = "Zonecam"
     app_url:  str = "http://localhost:5173"
-    db_name: str = "BSSPDDB"
+    db_name: str = "ZonecamDB"
     db_url: str = "mongodb://localhost:4000"
     debug:  bool = True
 
     # SECURITY
     allowed_origins: list = ["http://localhost:5173",
-                             "https://bsspd.vercel.app"]
+                             "https://zonecam.vercel.app"]
     code_duration:  int = 5 * 60
     code_length: int = 6
     password_salt: str = "*&^%&^#(*HD(*#&))"

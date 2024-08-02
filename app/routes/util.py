@@ -5,7 +5,7 @@ from app.database import cols
 def fetch_email_and_name(user: dict) -> tuple[str, str]:
 
     email = user["email"]
-    name = user["full_name"]
+    name = user["first_name"]
 
     return email, name
 

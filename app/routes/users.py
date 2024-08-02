@@ -54,7 +54,7 @@ async def log_in(req:  Request, body: OAuth2PasswordRequestForm = Depends(), dev
     u = await util.fetch_user(body.username)
 
     if not u:
-        util.raise_unauthorized("Invalid email or password.")
+        util.raise_unauthorized("Invalid credentials.")
 
     email, name = util.fetch_email_and_name(u)
 
@@ -81,12 +81,12 @@ async def log_in(req:  Request, body: OAuth2PasswordRequestForm = Depends(), dev
     else:
 
         if not is_correct_password:
-            util.raise_unauthorized("Invalid email or password.")
+            util.raise_unauthorized("Invalid credentials.")
 
         token = await create_access_token(user.uid)
 
-        creators.task_send_email(
-            "sign_in_notification", email, {"first_name": name, "sign_in_time": str(datetime.now().strftime("%A, %B %d, %Y %I:%M %p")), "ip_address": req.client.host, "device":  device})
+        # creators.task_send_email(
+        #     "sign_in_notification", email, {"first_name": name, "sign_in_time": str(datetime.now().strftime("%A, %B %d, %Y %I:%M %p")), "ip_address": req.client.host, "device":  device})
 
         return AccessToken(access_token=token)
 
@@ -321,7 +321,8 @@ async def register_new_user(body:  UserInput):
     user = User(
         email=body.email,
         password_hash=hash,
-        full_name=body.full_name,
+        first_name=body.first_name,
+        last_name=body.last_name,
         is_active=False,
         email_verified=False,
     )
