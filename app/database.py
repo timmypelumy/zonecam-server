@@ -20,3 +20,5 @@ class cols():
     sessions = db["Sessions"]
     accesscodes = db["AccessCodes"]
     passwordresetstores = db["PasswordResetStores"]
+    prediction_results = db["PredictionResults"]
+    prediction_requests = db["PredictionRequests"]

@@ -1,5 +1,88 @@
 from fastapi import HTTPException, status
 from app.database import cols
+import numpy as np
+import base64
+from io import BytesIO
+from PIL import Image
+from app.models.enums import LabelClasses
+import requests
+from tensorflow.keras.preprocessing import image
+from app.config.settings import get_settings
+
+
+settings = get_settings()
+
+target_size = (224, 224)
+
+
+# Function to preprocess and predict on a single image array
+def predict_single_image(model, img_array):
+    img_array = img_array / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
+    predictions = model.predict(img_array)
+    predicted_class_index = np.argmax(predictions, axis=1)[0]
+    return predicted_class_index
+
+
+def predict_images(model, images: list[dict]):
+
+    predictions = []
+
+    try:
+
+        for item in images:
+
+            image_str = item["image_str"]
+
+            image_data = base64.b64decode(image_str)
+            img = Image.open(BytesIO(image_data))
+
+            # Convert the image to RGB if it has an alpha channel
+        if img.mode == 'RGBA':
+            img = img.convert('RGB')
+
+            img_array = image.img_to_array(img.resize(target_size))
+
+            # Make prediction
+            predicted_class_index = predict_single_image(model, img_array)
+
+            label = None
+
+            if settings.debug:
+
+                print("Predicted class index: ", predicted_class_index)
+
+            if predicted_class_index == 0:
+                label = LabelClasses.AFRICAN
+
+            elif predicted_class_index == 1:
+                label = LabelClasses.AMERICAN
+
+            elif predicted_class_index == 2:
+                label = LabelClasses.ASIAN
+
+            elif predicted_class_index == 3:
+
+                label = LabelClasses.EUROPEAN
+
+            else:
+                label = LabelClasses.OTHER
+
+            # Append prediction result
+            predictions.append({
+                "label": label,
+                "image_id": item["image_id"],
+                "prediction_request_id": item["prediction_request_id"]
+            })
+
+        return predictions
+
+    except Exception as e:
+
+        if settings.debug:
+            print("Error predicting images: ", e)
+
+        return predictions
 
 
 def fetch_email_and_name(user: dict) -> tuple[str, str]:

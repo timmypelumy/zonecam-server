@@ -1,4 +1,4 @@
-from enum import StrEnum
+from enum import Enum, unique, StrEnum
 
 
 class UserType(StrEnum):
@@ -14,3 +14,12 @@ class OperationTypes(StrEnum):
     phone_change = "PHONE_CHANGE"
     phone_verify = "PHONE_VERIFY"
     phone_reset = "PHONE_RESET"
+
+
+@unique
+class LabelClasses(str, Enum):
+    AFRICAN = "AFRICAN"
+    ASIAN = "ASIAN"
+    AMERICAN = "AMERICAN"
+    EUROPEAN = "EUROPEAN"
+    OTHER = "OTHER"
