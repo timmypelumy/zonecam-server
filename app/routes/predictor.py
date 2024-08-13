@@ -3,7 +3,7 @@ from app.models.users import User
 from app.models.predictor import *
 from .deps import get_auth_user, retrieve_session
 from app.database import db, cols
-# from app.huey_tasks.tasks import task_predict_images
+from app.huey_tasks.tasks import task_predict_images
 
 
 router = APIRouter()
@@ -43,6 +43,6 @@ async def predict_maize_disease(images: list[ImageData], user:  User = Depends(g
     if len(entries) > 0:
         await cols.prediction_requests.insert_many(entries)
 
-        # task_predict_images(task_data)
+        task_predict_images(task_data)
 
     return entries

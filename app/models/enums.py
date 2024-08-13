@@ -1,12 +1,12 @@
-from enum import Enum, unique, StrEnum
+from enum import Enum, unique
 
 
-class UserType(StrEnum):
+class UserType(str, Enum):
     organization = "ORGANIZATION"
     individual = "INDIVIDUAL"
 
 
-class OperationTypes(StrEnum):
+class OperationTypes(str, Enum):
     signup = "SIGNUP"
     password_reset = "PASSWORD_RESET"
     email_verify = "EMAIL_VERIFY"
