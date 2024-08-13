@@ -37,6 +37,8 @@ class Settings(BaseSettings):
     mail_domain:  str = ""
     mail_domain_username:  str = ""
 
+    ml_model_path  :  str = ""
+
     model_config = SettingsConfigDict(env_file=".env")
 
 
