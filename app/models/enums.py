@@ -23,3 +23,9 @@ class LabelClasses(str, Enum):
     AMERICAN = "AMERICAN"
     EUROPEAN = "EUROPEAN"
     OTHER = "OTHER"
+
+
+@unique
+class Genders(str,Enum):
+    male  = "M"
+    female = "F"

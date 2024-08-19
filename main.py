@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.config.settings import get_settings
 from app.routes.users import router as users_router
+from app.routes.predictor import router as predictor_router
 from app.tasks.setup import huey
 
 settings = get_settings()
@@ -38,3 +39,4 @@ async def status(req: Request):
 
 
 app.include_router(users_router, prefix="/api")
+app.include_router(predictor_router, prefix="/api")

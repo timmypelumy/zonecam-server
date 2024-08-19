@@ -7,9 +7,92 @@ from app.config.settings import get_settings
 import time
 import requests
 import phonenumbers
+from tensorflow.keras.preprocessing import image
+from app.models.enums import LabelClasses
+import requests
+import numpy as np
+import base64
+from io import BytesIO
+from PIL import Image
 
 
 settings = get_settings()
+
+target_size = (224, 224)
+
+
+
+# Function to preprocess and predict on a single image array
+def predict_single_image(model, img_array, age, gender):
+    img_array = img_array / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
+    age = np.array([age])
+    gender = np.array([gender])
+    predictions = model.predict([img_array, age, gender])
+    predicted_class_index = np.argmax(predictions, axis=1)
+    return predicted_class_index
+
+
+def predict_image(model, input_data: dict):
+
+
+    try:
+        image_str = input_data["image_str"]
+
+        image_data = base64.b64decode(image_str)
+        img = Image.open(BytesIO(image_data))
+
+        # Convert the image to RGB if it has an alpha channel
+        if img.mode == 'RGBA':
+            img = img.convert('RGB')
+
+        img_array = image.img_to_array(img.resize(target_size))
+
+        age = input_data["age"]
+
+        gender = input_data["gender"]
+
+        # Make prediction
+        predicted_class_index = predict_single_image(model, img_array, age, gender)
+
+        label = None
+
+        if settings.debug:
+
+            print("Predicted class index: ", predicted_class_index)
+
+        if predicted_class_index == 0:
+            label = LabelClasses.AFRICAN
+
+        elif predicted_class_index == 1:
+            label = LabelClasses.AMERICAN
+
+        elif predicted_class_index == 2:
+            label = LabelClasses.ASIAN
+
+        elif predicted_class_index == 3:
+
+            label = LabelClasses.EUROPEAN
+
+        elif predicted_class_index == 4:
+            label = LabelClasses.OTHER
+
+        #  prediction result
+        r = {
+            "label": label,
+            "image_id": input_data["image_id"],
+            "prediction_request_id": input_data["prediction_request_id"]
+        }
+
+        return r
+
+    except Exception as e:
+
+        if settings.debug:
+            print("Error predicting images: ", e)
+
+        return None
+
 
 
 def debug_log(*args):

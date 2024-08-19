@@ -1,12 +1,14 @@
 from pydantic import BaseModel, Field
 from pydantic_settings import SettingsConfigDict
 from app.utils.helpers import get_uuid4, get_utc_timestamp
-from .enums import LabelClasses
+from .enums import LabelClasses, Genders
 
 
-class ImageData(BaseModel):
+class PredictionData(BaseModel):
     id: str
     image_string: str = Field(alias="imageString")
+    age : int = Field(alias="age", ge=0, le=200)
+    gender : Genders = Field()
 
     model_config = SettingsConfigDict(populate_by_name=True)
 

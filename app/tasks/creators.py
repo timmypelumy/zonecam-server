@@ -7,6 +7,7 @@ from app.config.settings import get_settings
 from app.database import cols
 from app.models.predictor import PredictionResult, ResultItem
 from datetime import timedelta
+from app.utils.helpers import predict_image
 from tensorflow.keras.models import load_model
 
 
@@ -23,28 +24,23 @@ except Exception as e:
 
 
 @huey.task(retries=1, retry_delay=20, name="task_predict_images", expires=timedelta(minutes=5))
-def task_predict_images(data:  list[dict]):
+def task_predict_image(data:  dict):
 
-    predictions = predict_images(model, data)
+    x = predict_image(model, data)
 
-    entries = []
+    if x is None:
+        raise CancelExecution()
 
-    for x in predictions:
-
-        index = predictions.index(x)
-
-        r = PredictionResult(prediction_request_id=x["prediction_request_id"], result=ResultItem(
-            image_string=data[index]["image_str"],
+    r = PredictionResult(prediction_request_id=x["prediction_request_id"], result=ResultItem(
+            image_string=data["image_str"],
             image_id=x["image_id"], label_class=x["label"]))
 
-        entries.append(r.model_dump())
-
-    if len(entries) > 0:
-        cols.prediction_results.insert_many(entries)
+  
+    cols.prediction_results.insert_one(r.model_dump())
 
     if settings.debug:
 
-        print("Predictions: ", predictions)
+        print("Prediction: ", r)
 
 
 @huey.task(retries=2,  retry_delay=15, name="task_send_email")
