@@ -14,6 +14,8 @@ import numpy as np
 import base64
 from io import BytesIO
 from PIL import Image
+from tensorflow.keras.models import load_model
+
 
 
 settings = get_settings()
@@ -21,9 +23,18 @@ settings = get_settings()
 target_size = (224, 224)
 
 
+model = None
+
+
+try:
+    model = load_model(settings.ml_model_path)
+    print("Model loaded successfully")
+except Exception as e:
+    raise Exception("Error loading model: ", e)
+
 
 # Function to preprocess and predict on a single image array
-def predict_single_image(model, img_array, age, gender):
+def predict_single_image( img_array, age, gender):
     img_array = img_array / 255.0
     img_array = np.expand_dims(img_array, axis=0)
     age = np.array([age])
@@ -33,7 +44,7 @@ def predict_single_image(model, img_array, age, gender):
     return predicted_class_index
 
 
-def predict_image(model, input_data: dict):
+def predict_image(input_data: dict):
 
 
     try:
@@ -53,7 +64,7 @@ def predict_image(model, input_data: dict):
         gender = input_data["gender"]
 
         # Make prediction
-        predicted_class_index = predict_single_image(model, img_array, age, gender)
+        predicted_class_index = predict_single_image( img_array, age, gender)
 
         label = None
 

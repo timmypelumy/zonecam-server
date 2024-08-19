@@ -8,25 +8,16 @@ from app.database import cols
 from app.models.predictor import PredictionResult, ResultItem
 from datetime import timedelta
 from app.utils.helpers import predict_image
-from tensorflow.keras.models import load_model
 
 
 settings = get_settings()
 
-model = None
-
-
-try:
-    model = load_model(settings.ml_model_path)
-    print("Model loaded successfully")
-except Exception as e:
-    raise Exception("Error loading model: ", e)
 
 
 @huey.task(retries=1, retry_delay=20, name="task_predict_images", expires=timedelta(minutes=5))
 def task_predict_image(data:  dict):
 
-    x = predict_image(model, data)
+    x = predict_image( data)
 
     if x is None:
         raise CancelExecution()
