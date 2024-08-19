@@ -62,20 +62,20 @@ def predict_image(model, input_data: dict):
             print("Predicted class index: ", predicted_class_index)
 
         if predicted_class_index == 0:
-            label = LabelClasses.AFRICAN
+            label = LabelClasses.WHITE
 
         elif predicted_class_index == 1:
-            label = LabelClasses.AMERICAN
+            label = LabelClasses.BLACK
 
         elif predicted_class_index == 2:
             label = LabelClasses.ASIAN
 
         elif predicted_class_index == 3:
 
-            label = LabelClasses.EUROPEAN
+            label = LabelClasses.INDIAN
 
         elif predicted_class_index == 4:
-            label = LabelClasses.OTHER
+            label = LabelClasses.OTHERS
 
         #  prediction result
         r = {

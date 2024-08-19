@@ -18,11 +18,11 @@ class OperationTypes(str, Enum):
 
 @unique
 class LabelClasses(str, Enum):
-    AFRICAN = "AFRICAN"
+    WHITE = "WHITE"
+    BLACK = "BLACK"
     ASIAN = "ASIAN"
-    AMERICAN = "AMERICAN"
-    EUROPEAN = "EUROPEAN"
-    OTHER = "OTHER"
+    INDIAN = "INDIAN"
+    OTHERS = "OTHERS"
 
 
 @unique
