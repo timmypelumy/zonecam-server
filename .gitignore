@@ -11,6 +11,8 @@ db.sqlite3
 db.sqlite3-journal
 media
 
+temp_weights.h5
+
 huey.db
 huey.db-shm
 huey.db-wal

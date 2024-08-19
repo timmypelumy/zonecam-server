@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from fastapi import status as status_codes
 from app.config.settings import get_settings
 import time
-import requests
+import requests, tempfile
 import phonenumbers
 from tensorflow.keras.preprocessing import image
 from app.models.enums import LabelClasses
@@ -14,7 +14,7 @@ import numpy as np
 import base64
 from io import BytesIO
 from PIL import Image
-from tensorflow.keras.models import load_model
+from tensorflow.keras.models import model_from_json, load_model
 
 
 
@@ -22,15 +22,32 @@ settings = get_settings()
 
 target_size = (224, 224)
 
-
 model = None
 
 
 try:
-    model = load_model(settings.ml_model_path)
+    # Public S3 URL of your model file
+    s3_url = "https://mycyclone.s3.amazonaws.com/zonecam.keras"
+    
+    # Download the model file from the public S3 URL
+    response = requests.get(s3_url)
+    response.raise_for_status()  # Raise an exception for HTTP errors
+    
+    # Create a temporary file to save the downloaded model
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".keras") as temp_file:
+        temp_file.write(response.content)
+        temp_file_path = temp_file.name
+    
+    # Load the model from the temporary file
+    model = load_model(temp_file_path)
+    
+    # Delete the temporary file
+    os.remove(temp_file_path)
+    
     print("Model loaded successfully")
 except Exception as e:
     raise Exception("Error loading model: ", e)
+        
 
 
 # Function to preprocess and predict on a single image array
