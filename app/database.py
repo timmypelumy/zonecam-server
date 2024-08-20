@@ -24,7 +24,7 @@ class cols():
     prediction_requests = db["PredictionRequests"]
 
 
-class SyncCols(Enum):
+class SyncCols():
     users = sync_db["Users"]
     sessions = sync_db["Sessions"]
     accesscodes = sync_db["AccessCodes"]
