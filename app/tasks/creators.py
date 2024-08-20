@@ -4,7 +4,7 @@ from .setup import huey
 from app.config.settings import get_settings
 from app.utils.emails.send_email import dispatch_email
 from app.config.settings import get_settings
-from app.database import cols
+from app.database import SyncCols
 from app.models.predictor import PredictionResult, ResultItem
 from datetime import timedelta
 from app.utils.helpers import predict_image
@@ -13,21 +13,19 @@ from app.utils.helpers import predict_image
 settings = get_settings()
 
 
-
 @huey.task(retries=1, retry_delay=20, name="task_predict_images", expires=timedelta(minutes=5))
 def task_predict_image(data:  dict):
 
-    x = predict_image( data)
+    x = predict_image(data)
 
     if x is None:
         raise CancelExecution()
 
     r = PredictionResult(prediction_request_id=x["prediction_request_id"], result=ResultItem(
-            image_string=data["image_str"],
-            image_id=x["image_id"], label_class=x["label"]))
+        image_string=data["image_str"],
+        image_id=x["image_id"], label_class=x["label"]))
 
-  
-    cols.prediction_results.insert_one(r.model_dump())
+    SyncCols.prediction_results.insert_one(r.model_dump())
 
     if settings.debug:
 

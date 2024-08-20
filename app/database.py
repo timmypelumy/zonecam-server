@@ -22,3 +22,12 @@ class cols():
     passwordresetstores = db["PasswordResetStores"]
     prediction_results = db["PredictionResults"]
     prediction_requests = db["PredictionRequests"]
+
+
+class SyncCols(Enum):
+    users = sync_db["Users"]
+    sessions = sync_db["Sessions"]
+    accesscodes = sync_db["AccessCodes"]
+    passwordresetstores = sync_db["PasswordResetStores"]
+    prediction_results = sync_db["PredictionResults"]
+    prediction_requests = sync_db["PredictionRequests"]
