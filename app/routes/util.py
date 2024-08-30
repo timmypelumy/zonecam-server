@@ -52,21 +52,43 @@ def predict_images(model, images: list[dict]):
 
                 print("Predicted class index: ", predicted_class_index)
 
-            if predicted_class_index == 0:
-                label = LabelClasses.AFRICAN
-
-            elif predicted_class_index == 1:
-                label = LabelClasses.AMERICAN
+            if predicted_class_index == 1:
+                label = LabelClasses.NORTH_CENTRAL
 
             elif predicted_class_index == 2:
-                label = LabelClasses.ASIAN
+                label = LabelClasses.NORTH_EAST
 
             elif predicted_class_index == 3:
+                label = LabelClasses.NORTH_WEST
 
-                label = LabelClasses.EUROPEAN
+            elif predicted_class_index == 4:
+
+                label = LabelClasses.SOUTH_EAST
+
+            elif predicted_class_index == 5:
+                label = LabelClasses.SOUTH_SOUTH
+
+            elif predicted_class_index == 6:
+                label = LabelClasses.SOUTH_WEST
 
             else:
                 label = LabelClasses.OTHER
+
+            # if predicted_class_index == 0:
+            #     label = LabelClasses.AFRICAN
+
+            # elif predicted_class_index == 1:
+            #     label = LabelClasses.AMERICAN
+
+            # elif predicted_class_index == 2:
+            #     label = LabelClasses.ASIAN
+
+            # elif predicted_class_index == 3:
+
+            #     label = LabelClasses.EUROPEAN
+
+            # else:
+            #     label = LabelClasses.OTHER
 
             # Append prediction result
             predictions.append({

@@ -1,12 +1,12 @@
-from enum import Enum, unique
+from enum import Enum, unique, StrEnum
 
 
-class UserType(str, Enum):
+class UserType(StrEnum):
     organization = "ORGANIZATION"
     individual = "INDIVIDUAL"
 
 
-class OperationTypes(str, Enum):
+class OperationTypes(StrEnum):
     signup = "SIGNUP"
     password_reset = "PASSWORD_RESET"
     email_verify = "EMAIL_VERIFY"
@@ -17,15 +17,20 @@ class OperationTypes(str, Enum):
 
 
 @unique
-class LabelClasses(str, Enum):
-    WHITE = "WHITE"
-    BLACK = "BLACK"
+class LabelClasses2(str, Enum):
+    AFRICAN = "AFRICAN"
     ASIAN = "ASIAN"
-    INDIAN = "INDIAN"
-    OTHERS = "OTHERS"
+    AMERICAN = "AMERICAN"
+    EUROPEAN = "EUROPEAN"
+    OTHER = "OTHER"
 
 
 @unique
-class Genders(str,Enum):
-    male  = "M"
-    female = "F"
+class LabelClasses(str, Enum):
+    NORTH_CENTRAL = "North Central"
+    NORTH_EAST = "North East"
+    NORTH_WEST = "North West"
+    SOUTH_EAST = "South East"
+    SOUTH_SOUTH = "South South"
+    SOUTH_WEST = "South West"
+    OTHER = "Other"
