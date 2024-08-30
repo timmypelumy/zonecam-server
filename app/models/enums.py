@@ -1,9 +1,10 @@
 from enum import Enum, unique, StrEnum
 
 
-class UserType(StrEnum):
-    organization = "ORGANIZATION"
-    individual = "INDIVIDUAL"
+@unique
+class Genders(StrEnum):
+    male = "M"
+    female = "F"
 
 
 class OperationTypes(StrEnum):
