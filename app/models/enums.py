@@ -1,6 +1,11 @@
 from enum import Enum, unique, StrEnum
 
 
+class UserType(str, Enum):
+    organization = "ORGANIZATION"
+    individual = "INDIVIDUAL"
+
+
 @unique
 class Genders(StrEnum):
     male = "M"
