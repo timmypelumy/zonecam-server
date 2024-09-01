@@ -5,7 +5,8 @@ from datetime import datetime, timezone
 from fastapi import status as status_codes
 from app.config.settings import get_settings
 import time
-import requests, tempfile
+import requests
+import tempfile
 import phonenumbers
 from tensorflow.keras.preprocessing import image
 from app.models.enums import LabelClasses
@@ -14,8 +15,7 @@ import numpy as np
 import base64
 from io import BytesIO
 from PIL import Image
-from tensorflow.keras.models import model_from_json, load_model
-
+from tensorflow.keras.models import load_model
 
 
 settings = get_settings()
@@ -28,30 +28,29 @@ model = None
 try:
     # Public S3 URL of your model file
     s3_url = "https://mycyclone.s3.amazonaws.com/zonecam.keras"
-    
+
     # Download the model file from the public S3 URL
     response = requests.get(s3_url)
     response.raise_for_status()  # Raise an exception for HTTP errors
-    
+
     # Create a temporary file to save the downloaded model
     with tempfile.NamedTemporaryFile(delete=False, suffix=".keras") as temp_file:
         temp_file.write(response.content)
         temp_file_path = temp_file.name
-    
+
     # Load the model from the temporary file
     model = load_model(temp_file_path)
-    
+
     # Delete the temporary file
     os.remove(temp_file_path)
-    
+
     print("Model loaded successfully")
 except Exception as e:
     raise Exception("Error loading model: ", e)
-        
 
 
 # Function to preprocess and predict on a single image array
-def predict_single_image( img_array, age, gender):
+def predict_single_image(img_array, age, gender):
     img_array = img_array / 255.0
     img_array = np.expand_dims(img_array, axis=0)
     age = np.array([age])
@@ -62,7 +61,6 @@ def predict_single_image( img_array, age, gender):
 
 
 def predict_image(input_data: dict):
-
 
     try:
         image_str = input_data["image_str"]
@@ -81,7 +79,7 @@ def predict_image(input_data: dict):
         gender = input_data["gender"]
 
         # Make prediction
-        predicted_class_index = predict_single_image( img_array, age, gender)
+        predicted_class_index = predict_single_image(img_array, age, gender)
 
         label = None
 
@@ -90,20 +88,26 @@ def predict_image(input_data: dict):
             print("Predicted class index: ", predicted_class_index)
 
         if predicted_class_index == 0:
-            label = LabelClasses.WHITE
+            label = LabelClasses.NORTH_CENTRAL
 
         elif predicted_class_index == 1:
-            label = LabelClasses.BLACK
+            label = LabelClasses.NORTH_EAST
 
         elif predicted_class_index == 2:
-            label = LabelClasses.ASIAN
+            label = LabelClasses.NORTH_WEST
 
         elif predicted_class_index == 3:
 
-            label = LabelClasses.INDIAN
+            label = LabelClasses.SOUTH_EAST
 
         elif predicted_class_index == 4:
-            label = LabelClasses.OTHERS
+            label = LabelClasses.SOUTH_SOUTH
+
+        elif predicted_class_index == 5:
+            label = LabelClasses.SOUTH_WEST
+
+        else:
+            label = LabelClasses.OTHER
 
         #  prediction result
         r = {
@@ -120,7 +124,6 @@ def predict_image(input_data: dict):
             print("Error predicting images: ", e)
 
         return None
-
 
 
 def debug_log(*args):
