@@ -52,23 +52,23 @@ def predict_images(model, images: list[dict]):
 
                 print("Predicted class index: ", predicted_class_index)
 
-            if predicted_class_index == 1:
+            if predicted_class_index == 0:
                 label = LabelClasses.NORTH_CENTRAL
 
-            elif predicted_class_index == 2:
+            elif predicted_class_index == 1:
                 label = LabelClasses.NORTH_EAST
 
-            elif predicted_class_index == 3:
+            elif predicted_class_index == 2:
                 label = LabelClasses.NORTH_WEST
 
-            elif predicted_class_index == 4:
+            elif predicted_class_index == 3:
 
                 label = LabelClasses.SOUTH_EAST
 
-            elif predicted_class_index == 5:
+            elif predicted_class_index == 4:
                 label = LabelClasses.SOUTH_SOUTH
 
-            elif predicted_class_index == 6:
+            elif predicted_class_index == 5:
                 label = LabelClasses.SOUTH_WEST
 
             else:
