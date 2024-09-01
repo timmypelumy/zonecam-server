@@ -27,7 +27,8 @@ model = None
 
 try:
     # Public S3 URL of your model file
-    s3_url = "https://mycyclone.s3.amazonaws.com/zonecam.keras"
+    # s3_url = "https://mycyclone.s3.amazonaws.com/zonecam.keras"
+    s3_url = "https://mycyclone.s3.amazonaws.com/main.keras"
 
     # Download the model file from the public S3 URL
     response = requests.get(s3_url)
